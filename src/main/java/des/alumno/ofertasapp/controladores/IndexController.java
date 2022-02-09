@@ -61,14 +61,8 @@ public class IndexController {
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/prioridad/{prioridad}")
 	public List<Oferta>  getOfertasPorPrioidad(@PathVariable("prioridad") String prioridad) {
-			List<Oferta> lista = servicioOferta.buscarTodas();
-			List<Oferta> resultado;
-			for(Oferta o : lista) {
-				if(o.getPrioridad().equals(prioridad)) {
-					resultado.add(o);
-				}
-			}
-		return List<Oferta> resultado;
+			
+		return servicioOferta2.findByPrioridad(prioridad);
 	}	
 	
 }
