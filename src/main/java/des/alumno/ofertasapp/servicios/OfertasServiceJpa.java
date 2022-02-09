@@ -39,14 +39,4 @@ public class OfertasServiceJpa implements IOfertasService {
 		return null;
 	}
 
-	/*@Override
-	public List<Oferta> buscarTodas(String prioridad) {
-		List<Oferta> ofertas = ofertasRepo.findAll();
-		for (Oferta o : ofertas) {
-			if (o.getPrioridad() == prioridad) {
-				return (List<Oferta>) o;
-			}
-		}
-		return null;
-	}*/
 }

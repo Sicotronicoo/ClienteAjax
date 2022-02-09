@@ -9,5 +9,4 @@ public interface IOfertasService {
 	void guardar(Oferta oferta);
 	void borrar(Integer idOferta);
 	Oferta buscarPorId(Integer idOferta);
-	//List<Oferta> buscarTodas(String prioridad);
 }

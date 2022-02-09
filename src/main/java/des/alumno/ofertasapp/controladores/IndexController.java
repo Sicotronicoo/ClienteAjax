@@ -54,7 +54,7 @@ public class IndexController {
 	
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/oferta/{id}")
-	public <List>Oferta  getPerfil(@PathVariable("id") int idOferta) {
+	public Oferta  getPerfil(@PathVariable("id") int idOferta) {
 		return servicioOferta.buscarPorId(idOferta);
 	}	
 	
