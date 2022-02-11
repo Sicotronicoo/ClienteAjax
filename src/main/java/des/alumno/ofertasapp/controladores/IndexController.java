@@ -33,17 +33,11 @@ public class IndexController {
 	}
 
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.GET, value = "todos")
-	public List<Oferta> obtenerTodos() {
-		return servicioOferta.buscarTodas();
-	}
-	
 	@PostMapping("/crear")
-	public String crear_post(Oferta oferta) {		
+	public boolean crear_post(Oferta oferta) {		
 		oferta.setFecha_Publicacion(new Date()); 
-
 		servicioOferta.guardar(oferta);
-		return "redirect:/";
+		return true;
 	}
 	
 	@GetMapping("/borrar/{id}")

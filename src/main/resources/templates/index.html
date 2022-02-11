@@ -71,8 +71,8 @@
 				</div>
 
 				<div class="form-group">
-					<label for="selectProducto">Selecciona Priodad</label> <select class="form-select"
-						id="selectProducto" size="3" name="prioridad">
+					<label for="selectProducto">Selecciona Priodad</label>
+					<select class="form-select" id="selectProducto" size="3" name="prioridad">
 						<option>Baja</option>
 						<option>Media</option>
 						<option>Alta</option>
@@ -115,7 +115,7 @@
 					</tr>
 				</thead>
 				<tbody id="tableBody">
-				
+
 				</tbody>
 			</table>
 
@@ -184,7 +184,7 @@
 
 	<!-- Apertura Ventana modal-->
 	<div id="modal" class="modal">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title"></h5>
@@ -192,19 +192,23 @@
 						<span aria-hidden="true"></span>
 					</button>
 				</div>
-				<div class="modal-body">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary">Save changes</button>
-					<button type="button" id="cerrar-modal" class="btn btn-secondary"
-						data-bs-dismiss="modal">Close</button>
-				</div>
+				<form>
+					<div class="modal-body form-group">
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="actualizar" class="btn btn-info">Editar</button>
+						<button type="submit" id="actualizarOferta" class="btn btn-primary">Save changes</button>
+						<button type="button" id="cerrar-modal" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+					</div>
+				</form>
+
 			</div>
 		</div>
 	</div>
 	<!-- Cierre Ventana modal-->
 
- <script src="js/Oferta.js"></script>
+	<script src="js/Oferta.js"></script>
 </body>
 
 </html>
