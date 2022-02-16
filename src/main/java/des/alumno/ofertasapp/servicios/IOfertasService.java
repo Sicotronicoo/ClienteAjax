@@ -5,8 +5,8 @@ import java.util.List;
 import des.alumno.ofertasapp.entidades.Oferta;
 
 public interface IOfertasService {
-	List<Oferta> buscarTodas();
-	void guardar(Oferta oferta);
-	void borrar(Integer idOferta);
-	Oferta buscarPorId(Integer idOferta);
+	public List<Oferta> buscarTodas();
+	public Oferta guardar(Oferta oferta);
+	public void borrar(Integer idOferta);
+	public Oferta buscarPorId(Integer idOferta);
 }

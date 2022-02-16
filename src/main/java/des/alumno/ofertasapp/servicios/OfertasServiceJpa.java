@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import des.alumno.ofertasapp.entidades.Oferta;
@@ -21,8 +22,13 @@ public class OfertasServiceJpa implements IOfertasService {
 	}
 
 	@Override
-	public void guardar(Oferta oferta) {
-		ofertasRepo.save(oferta);
+	public Oferta guardar(Oferta oferta) {
+		 try {
+	            Oferta oferta1 = ofertasRepo.save(oferta);
+	            return oferta1;
+	        } catch (DataAccessException dae) {
+	            return null;
+	        }
 	}
 
 	@Override
@@ -38,5 +44,4 @@ public class OfertasServiceJpa implements IOfertasService {
 		}
 		return null;
 	}
-
 }

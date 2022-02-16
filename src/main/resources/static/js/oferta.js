@@ -7,8 +7,7 @@ const editar = document.querySelector('#actualizar');
 const filtrarPorPriridad = document.querySelector('#filtrarPorPrioridad');
 const actualizarOferta = document.querySelector('#actualizarOferta');
 
-
-function obtenerOfertas() {
+const obtenerOfertas = () => {
 	fetch('/index', { headers: { "Content-Type": "application/json; charset=utf-8" } })
 		.then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
 		.then(response => {
@@ -44,7 +43,18 @@ function obtenerOfertas() {
 				botonInfo.textContent = 'Info';
 				botonInfo.setAttribute('class', 'btn btn-info info');
 				botonInfo.setAttribute('id', 'info');
+				botonInfo.setAttribute('name', 'infoModal');
 				botonInfo.setAttribute('type', 'button');
+				botonInfo.addEventListener('click', () => {
+					$("#modal").modal('show');
+					mostrarModal(oferta.id_oferta);
+				});
+				$(".btn-close").on('click', function() {
+					$("#modal").modal("hide");
+				});
+				$("#cerrar-modal").on('click', function() {
+					$("#modal").modal("hide");
+				});
 
 				botonBorrar.textContent = 'Borrar';
 				botonBorrar.setAttribute('class', 'btn btn-success borrar');
@@ -58,22 +68,19 @@ function obtenerOfertas() {
 				tdInfo.appendChild(botonInfo);
 				tdBorrar.appendChild(botonBorrar);
 				tr.appendChild(tdInfo);
+
 				tr.appendChild(tdBorrar);
 				tableBody.appendChild(tr);
-
-				borrarOferta();
-
+				borrarOferta(oferta.id_oferta);
 			}
 		});
 }
 
-const borrarOferta = () => {
+const borrarOferta = (idOferta) => {
 	const borrar = document.getElementsByName("Borrar");
 	for (let item of borrar) {
 		item.addEventListener('click', () => {
 			item.closest('tr').remove();
-			var tr = item.closest('tr');
-			var idOferta = tr.childNodes[0].innerText;
 			$.ajax({
 				url: "/borrar/" + idOferta,
 				contentType: "application/json; charset=utf-8",
@@ -90,43 +97,32 @@ const borrarOferta = () => {
 
 }
 
-
-function crearOferta() {
+const crearOferta = () => {
 	if ($('#inputNombre').val() != "" && $('#selectProducto').val() != ""
 		&& $('#inputPrecio').val() != "" && $('#inputEnlace').val() != ""
 		&& $('#inputDescripcion').val() != "") {
-		fetch('/crear', {
-			headers: {
-				'Content-type': 'application/json'
-			},
+		fetch('/crear', { headers: { "Content-Type": "application/json; charset=utf-8" },
 			method: 'POST',
 			body: JSON.stringify({
-				nombre: $('#inputNombre').val(), prioridad: $('#selectProducto').val()
-				, precio: $('#inputPrecio').val(), hiperenlace: $('#inputEnlace').val(), descripcion: $('#inputDescripcion').val()
-			}).then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
-				.then(response => {
-					if (response) {
-						obtenerOfertas();
+				nombre: $('#inputNombre').val(),
+				prioridad: $('#selectProducto').val(),
+				precio: $('#inputPrecio').val(),
+				enlace: $('#inputEnlace').val(),
+				descripcion: $('#inputDescripcion').val()
+			})
+				.then(function(response) {
+					if (response.ok) {
+						return response.json()
+					} else {
+						throw "La oferta ya existe";
 					}
 				})
-
 		})
 	};
 }
+const mostrarModal = (idOferta) => {
 
-$(document).on('click', '#info', function() {
-	$("#modal").modal('show');
-
-	$(".btn-close").on('click', function() {
-		$("#modal").modal("hide");
-	});
-	$("#cerrar-modal").on('click', function() {
-		$("#modal").modal("hide");
-	});
-
-	let tr = $(this).closest("tr");
-	let id = tr[0].childNodes[0].innerText;
-	fetch('/oferta/' + id, { headers: { "Content-Type": "application/json; charset=utf-8" } })
+	fetch('/oferta/' + idOferta, { headers: { "Content-Type": "application/json; charset=utf-8" } })
 		.then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
 		.then(response => {
 
@@ -257,9 +253,9 @@ $(document).on('click', '#info', function() {
 			ModalBody.appendChild(labelPrecio);
 			ModalBody.appendChild(inputPrecio);
 			ModalBody.appendChild(document.createElement('br'));
-
 		});
-});
+
+}
 
 filtrarPorPriridad.addEventListener('click', () => {
 	const tabla = document.querySelector('#tableBody');
@@ -319,7 +315,6 @@ filtrarPorPriridad.addEventListener('click', () => {
 		});
 });
 
-
 editar.addEventListener('click', () => {
 	document.getElementById('inputDesactivadoNombre').disabled = false;
 	document.getElementById('inputDesactivadoDescripcion').disabled = false;
@@ -329,23 +324,23 @@ editar.addEventListener('click', () => {
 });
 
 actualizarOferta.addEventListener('click', () => {
-	fetch('/crear', {
-			headers: {
-				'Content-type': 'application/json'
-			},
-			method: 'POST',
-			body: JSON.stringify({
-				nombre: $('#inputDesactivadoNombre').val(),
-				precio: $('#inputDesactivadoPrecio').val(),
-				hiperenlace: $('#inputDesactivadoEnlace').val(),
-				descripcion: $('#inputDesactivadoDescripcion').val(),
-			}).then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
-				.then(response => {
-					if (response) {
-						obtenerOfertas();
-					}
-				})
+	fetch('/actualizar', {
+		headers: {
+			'Content-type': 'application/json'
+		},
+		method: 'POST',
+		body: JSON.stringify({
+			nombre: $('#inputDesactivadoNombre').val(),
+			prioridad: $('#inputDesactivadoPrioridad').val(),
+			precio: $('#inputDesactivadoPrecio').val(),
+			hiperenlace: $('#inputDesactivadoEnlace').val(),
+			descripcion: $('#inputDesactivadoDescripcion').val(),
+		}).then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
+			.then(response => {
+				if (response) {
+					obtenerOfertas();
+				}
+			})
 
-		})
+	})
 });
-

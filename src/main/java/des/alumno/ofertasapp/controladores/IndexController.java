@@ -2,14 +2,16 @@ package des.alumno.ofertasapp.controladores;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,13 +33,36 @@ public class IndexController {
 	public List<Oferta>index_get() {		
 		return servicioOferta.buscarTodas();
 	}
-
 	@ResponseBody
+	@RequestMapping(method = RequestMethod.POST, value = "crear")
+	public ResponseEntity<Object> crearOferta(@RequestBody Map<String, String> json) {
+		Oferta oferta = new Oferta();
+		oferta.setFecha_Publicacion(new Date()); 
+
+		oferta.setNombre(json.get("nombre"));
+		oferta.setNombre(json.get("prioridad"));
+		oferta.setNombre(json.get("precio"));
+		oferta.setNombre(json.get("enlace"));
+		oferta.setNombre(json.get("descripcion"));
+
+		servicioOferta.guardar(oferta);
+		
+		return new ResponseEntity<Object>(oferta, HttpStatus.OK);
+
+	}
+	/*@ResponseBody
 	@PostMapping("/crear")
-	public boolean crear_post(Oferta oferta) {		
+	public String crear_post(Oferta oferta) {		
 		oferta.setFecha_Publicacion(new Date()); 
 		servicioOferta.guardar(oferta);
-		return true;
+		return "redirect:/index";
+	}*/
+	@ResponseBody
+	@PostMapping("/actualizar")
+	public String actualizar(Oferta oferta) {		
+		oferta.setFecha_Publicacion(new Date()); 
+		servicioOferta2.save(oferta);
+		return "redirect:/index";
 	}
 	
 	@GetMapping("/borrar/{id}")
