@@ -112,11 +112,14 @@ const crearOferta = () => {
 			})
 				.then(function(response) {
 					if (response.ok) {
-						return response.json()
+						return response.json();
 					} else {
 						throw "La oferta ya existe";
 					}
 				})
+				.then(response => {
+                obtenerOfertas();
+            })
 		})
 	};
 }
@@ -154,12 +157,13 @@ const mostrarModal = (idOferta) => {
 			//Label e Input desactivado para Fecha de publicacion
 			let labelFecha = document.createElement('label');
 			labelFecha.textContent = 'Publicación: ';
-			let inputFecha = document.createElement('input');
-			inputFecha.setAttribute('type', 'date');
+			let inputFecha = document.createElement('p');
+			//inputFecha.setAttribute('type', 'date');
 			inputFecha.setAttribute('id', 'inputDesactivadoFecha');
 			inputFecha.setAttribute('name', 'inputDesactivados');
-			inputFecha.setAttribute('disabled', 'disabled');
-			inputFecha.setAttribute('placeholder', response.fecha_Publicacion);
+			//inputFecha.setAttribute('disabled', 'disabled');
+			inputFecha.innerText = response.fecha_Publicacion;
+			//inputFecha.setAttribute('placeholder', response.fecha_Publicacion);
 
 			//Label e Input desactivado para prioridad
 			let labelPrioridad = document.createElement('label');
@@ -324,7 +328,7 @@ editar.addEventListener('click', () => {
 });
 
 actualizarOferta.addEventListener('click', () => {
-	fetch('/actualizar', {
+	fetch('/editarOferta', {
 		headers: {
 			'Content-type': 'application/json'
 		},
@@ -336,11 +340,15 @@ actualizarOferta.addEventListener('click', () => {
 			hiperenlace: $('#inputDesactivadoEnlace').val(),
 			descripcion: $('#inputDesactivadoDescripcion').val(),
 		}).then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
-			.then(response => {
-				if (response) {
-					obtenerOfertas();
-				}
-			})
-
+				.then(function(response) {
+					if (response.ok) {
+						return response.json();
+					} else {
+						throw "La oferta ya existe";
+					}
+				})
+				.then(response => {
+                obtenerOfertas();
+            })
 	})
 });

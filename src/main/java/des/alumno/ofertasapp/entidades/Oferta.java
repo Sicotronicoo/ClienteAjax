@@ -22,14 +22,25 @@ public class Oferta {
 	private String prioridad;
 	private String enlace;
 	private String descripcion;
-	private double precio;
+	private float precio;
 	
 	public Oferta() {
 		
 	}	
 	
+	public Oferta(String nombre, Date fecha_Publicacion, String prioridad, String enlace, String descripcion,
+			float precio) {
+		super();
+		this.nombre = nombre;
+		this.fecha_Publicacion = fecha_Publicacion;
+		this.prioridad = prioridad;
+		this.enlace = enlace;
+		this.descripcion = descripcion;
+		this.precio = precio;
+	}
+
 	public Oferta(int id_oferta, String nombre, Date fecha_Publicacion, String prioridad, String enlace,
-			String descripcion, double precio) {
+			String descripcion, float precio) {
 		super();
 		this.id_oferta = id_oferta;
 		this.nombre = nombre;
@@ -82,10 +93,10 @@ public class Oferta {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public double getPrecio() {
+	public float getPrecio() {
 		return precio;
 	}
-	public void setPrecio(double precio) {
+	public void setPrecio(float precio) {
 		this.precio = precio;
 	}
 

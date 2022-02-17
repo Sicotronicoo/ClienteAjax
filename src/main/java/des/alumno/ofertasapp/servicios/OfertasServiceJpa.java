@@ -23,12 +23,12 @@ public class OfertasServiceJpa implements IOfertasService {
 
 	@Override
 	public Oferta guardar(Oferta oferta) {
-		 try {
-	            Oferta oferta1 = ofertasRepo.save(oferta);
-	            return oferta1;
-	        } catch (DataAccessException dae) {
-	            return null;
-	        }
+		try {
+			Oferta oferta1 = ofertasRepo.save(oferta);
+			return oferta1;
+		} catch (DataAccessException dae) {
+			return null;
+		}
 	}
 
 	@Override
@@ -43,5 +43,19 @@ public class OfertasServiceJpa implements IOfertasService {
 			return optional.get();
 		}
 		return null;
+	}
+
+	@Override
+	public Oferta actualizar(Oferta oferta) {
+		Oferta ofertaEditada = ofertasRepo.getById(oferta.getId_oferta());
+
+		ofertaEditada.setNombre(oferta.getNombre());
+		ofertaEditada.setFecha_Publicacion(oferta.getFecha_Publicacion());
+		ofertaEditada.setPrioridad(oferta.getPrioridad());
+		ofertaEditada.setEnlace(oferta.getEnlace());
+		ofertaEditada.setDescripcion(oferta.getDescripcion());
+		ofertaEditada.setPrecio(oferta.getPrecio());
+
+		return ofertaEditada;
 	}
 }

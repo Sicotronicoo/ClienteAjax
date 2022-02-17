@@ -9,4 +9,5 @@ public interface IOfertasService {
 	public Oferta guardar(Oferta oferta);
 	public void borrar(Integer idOferta);
 	public Oferta buscarPorId(Integer idOferta);
+	public Oferta actualizar(Oferta oferta);
 }

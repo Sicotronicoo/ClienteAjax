@@ -10,10 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import des.alumno.ofertasapp.entidades.Oferta;
@@ -27,61 +26,83 @@ public class IndexController {
 	private IOfertasService servicioOferta;
 	@Autowired
 	private OfertasRepository servicioOferta2;
-	
+
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/index")
-	public List<Oferta>index_get() {		
+	public List<Oferta> index_get() {
 		return servicioOferta.buscarTodas();
 	}
+
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "crear")
-	public ResponseEntity<Object> crearOferta(@RequestBody Map<String, String> json) {
-		Oferta oferta = new Oferta();
-		oferta.setFecha_Publicacion(new Date()); 
+	@RequestMapping(method = RequestMethod.POST, value = "/crear")
+	public ResponseEntity<Object> crearOferta(@RequestParam Map<String, String> json) {
 
-		oferta.setNombre(json.get("nombre"));
-		oferta.setNombre(json.get("prioridad"));
-		oferta.setNombre(json.get("precio"));
-		oferta.setNombre(json.get("enlace"));
-		oferta.setNombre(json.get("descripcion"));
-
-		servicioOferta.guardar(oferta);
+		String precio = json.get("precio");
+		float price = Float.parseFloat(precio);
 		
-		return new ResponseEntity<Object>(oferta, HttpStatus.OK);
+		Oferta oferta = servicioOferta.guardar(new Oferta( json.get("nombre"), new Date(), 
+				json.get("prioridad"),	json.get("enlace"),	json.get("descripcion"),price));
+
+		if (oferta != null)
+			return new ResponseEntity<Object>(oferta, HttpStatus.OK);
+		else
+			return new ResponseEntity<Object>(new Error("Email ya existente"), HttpStatus.FORBIDDEN);
+
+		
+		/*Oferta oferta = new Oferta(); 
+		 
+		 oferta.setFecha_Publicacion(new Date());		 
+		  String precio = json.get("precio");
+		 float price = Float.parseFloat(precio);		 
+		 oferta.setNombre(json.get("nombre"));
+		 oferta.setPrioridad(json.get("prioridad")); oferta.setPrecio(price);
+		 oferta.setEnlace(json.get("enlace"));
+		 oferta.setDescripcion(json.get("descripcion"));
+		 
+		 servicioOferta.guardar(oferta);
+		 
+		 return new ResponseEntity<Object>(oferta, HttpStatus.OK);*/
 
 	}
-	/*@ResponseBody
-	@PostMapping("/crear")
-	public String crear_post(Oferta oferta) {		
-		oferta.setFecha_Publicacion(new Date()); 
-		servicioOferta.guardar(oferta);
-		return "redirect:/index";
-	}*/
+
 	@ResponseBody
-	@PostMapping("/actualizar")
-	public String actualizar(Oferta oferta) {		
-		oferta.setFecha_Publicacion(new Date()); 
-		servicioOferta2.save(oferta);
-		return "redirect:/index";
+	@RequestMapping(method = RequestMethod.GET, value = "/editarOferta")
+	public ResponseEntity<Object> actualizarOferta(@RequestParam Map<String, String> json) {
+		
+		Oferta oferta = new Oferta();
+		
+		String precio = json.get("precio");
+		float price = Float.parseFloat(precio);		
+		oferta.setNombre(json.get("nombre"));
+		oferta.setPrioridad(json.get("prioridad"));
+		oferta.setEnlace(json.get("hiperenlace"));
+		oferta.setDescripcion(json.get("descripcion"));
+		oferta.setPrecio(price);
+		
+		Oferta ofertaEditada = servicioOferta.actualizar(oferta);
+        
+		return new ResponseEntity<Object>(ofertaEditada, HttpStatus.OK);
+		
 	}
-	
+
 	@GetMapping("/borrar/{id}")
 	public String borrarOferta(@PathVariable("id") int idOferta) {
 		servicioOferta.borrar(idOferta);
 		return "redirect:/";
 	}
+
 	
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/oferta/{id}")
-	public Oferta  getPerfil(@PathVariable("id") int idOferta) {
+	public Oferta getPerfil(@PathVariable("id") int idOferta) {
 		return servicioOferta.buscarPorId(idOferta);
-	}	
-	
+	}
+
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/prioridad/{prioridad}")
-	public List<Oferta>  getOfertasPorPrioidad(@PathVariable("prioridad") String prioridad) {
-			
+	public List<Oferta> getOfertasPorPrioidad(@PathVariable("prioridad") String prioridad) {
+
 		return servicioOferta2.findByPrioridad(prioridad);
-	}	
-	
+	}
+
 }
