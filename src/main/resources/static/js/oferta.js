@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 	obtenerOfertas();
 	$("#anadir").click(crearOferta);
+
 });
 
 const editar = document.querySelector('#actualizar');
@@ -11,6 +12,7 @@ const obtenerOfertas = () => {
 	fetch('/index', { headers: { "Content-Type": "application/json; charset=utf-8" } })
 		.then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
 		.then(response => {
+
 
 			for (let oferta of response) {
 				const tableBody = document.getElementById("tableBody");
@@ -97,11 +99,13 @@ const borrarOferta = (idOferta) => {
 
 }
 
-const crearOferta = () => {
+const crearOferta = (e) => {
+	e.preventDefault();
 	if ($('#inputNombre').val() != "" && $('#selectProducto').val() != ""
 		&& $('#inputPrecio').val() != "" && $('#inputEnlace').val() != ""
 		&& $('#inputDescripcion').val() != "") {
-		fetch('/crear', { headers: { "Content-Type": "application/json; charset=utf-8" },
+		fetch('/crear', {
+			headers: { "Content-Type": "application/json; charset=utf-8" },
 			method: 'POST',
 			body: JSON.stringify({
 				nombre: $('#inputNombre').val(),
@@ -110,17 +114,18 @@ const crearOferta = () => {
 				enlace: $('#inputEnlace').val(),
 				descripcion: $('#inputDescripcion').val()
 			})
-				.then(function(response) {
-					if (response.ok) {
-						return response.json();
-					} else {
-						throw "La oferta ya existe";
-					}
-				})
-				.then(response => {
-                obtenerOfertas();
-            })
+
+		}).then(function(response) {
+			if (response.ok) {
+				return response.json();
+			} else {
+				throw "La oferta ya existe";
+			}
 		})
+			.then(response => {
+				limpiarTabla();
+				obtenerOfertas();
+			})
 	};
 }
 const mostrarModal = (idOferta) => {
@@ -142,7 +147,7 @@ const mostrarModal = (idOferta) => {
 			inputId.setAttribute('id', 'inputDesactivadoId');
 			inputId.setAttribute('name', 'inputDesactivados');
 			inputId.setAttribute('disabled', 'disabled');
-			inputId.setAttribute('placeholder', response.id_oferta);
+			inputId.setAttribute('value', response.id_oferta);
 
 			//Label e Input desactivado para el Nombre
 			let labelNombre = document.createElement('label');
@@ -152,7 +157,7 @@ const mostrarModal = (idOferta) => {
 			inputNombre.setAttribute('id', 'inputDesactivadoNombre');
 			inputNombre.setAttribute('name', 'inputDesactivados');
 			inputNombre.setAttribute('disabled', 'disabled');
-			inputNombre.setAttribute('placeholder', response.nombre);
+			inputNombre.setAttribute('value', response.nombre);
 
 			//Label e Input desactivado para Fecha de publicacion
 			let labelFecha = document.createElement('label');
@@ -202,7 +207,7 @@ const mostrarModal = (idOferta) => {
 			inputEnlace.setAttribute('id', 'inputDesactivadoEnlace');
 			inputEnlace.setAttribute('name', 'inputDesactivados');
 			inputEnlace.setAttribute('disabled', 'disabled');
-			inputEnlace.setAttribute('placeholder', response.enlace);
+			inputEnlace.setAttribute('value', response.enlace);
 
 			//Label e Input desactivado para la descripcion
 			let labelDescripcion = document.createElement('label');
@@ -212,7 +217,7 @@ const mostrarModal = (idOferta) => {
 			inputDescripcion.setAttribute('id', 'inputDesactivadoDescripcion');
 			inputDescripcion.setAttribute('name', 'inputDesactivados');
 			inputDescripcion.setAttribute('disabled', 'disabled');
-			inputDescripcion.setAttribute('placeholder', response.descripcion);
+			inputDescripcion.setAttribute('value', response.descripcion);
 
 			//Label e Input desactivado para el precio
 			let labelPrecio = document.createElement('label');
@@ -222,7 +227,7 @@ const mostrarModal = (idOferta) => {
 			inputPrecio.setAttribute('id', 'inputDesactivadoPrecio');
 			inputPrecio.setAttribute('name', 'inputDesactivados');
 			inputPrecio.setAttribute('disabled', 'disabled');
-			inputPrecio.setAttribute('placeholder', response.precio);
+			inputPrecio.setAttribute('value', response.precio);
 
 
 			ModalBody.appendChild(labelId);
@@ -262,8 +267,7 @@ const mostrarModal = (idOferta) => {
 }
 
 filtrarPorPriridad.addEventListener('click', () => {
-	const tabla = document.querySelector('#tableBody');
-	tabla.innerHTML = "";
+	limpiarTabla();
 	const prioridad = document.querySelector('input[name="optionsRadios"]:checked').value;
 	fetch('/prioridad/' + prioridad, { headers: { "Content-Type": "application/json; charset=utf-8" } })
 		.then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
@@ -319,7 +323,12 @@ filtrarPorPriridad.addEventListener('click', () => {
 		});
 });
 
+const limpiarTabla = () => {
+	const tabla = document.querySelector('#tableBody');
+	tabla.innerHTML = "";
+}
 editar.addEventListener('click', () => {
+	//document.getElementById('inputDesactivadoId').disabled = false;
 	document.getElementById('inputDesactivadoNombre').disabled = false;
 	document.getElementById('inputDesactivadoDescripcion').disabled = false;
 	document.getElementById('inputDesactivadoPrioridad').disabled = false;
@@ -327,28 +336,36 @@ editar.addEventListener('click', () => {
 	document.getElementById('inputDesactivadoPrecio').disabled = false;
 });
 
-actualizarOferta.addEventListener('click', () => {
+const cerrarModal = () => {
+	let cerrar = document.querySelector('#modal');
+		$(cerrar).modal('hide');
+}
+actualizarOferta.addEventListener('click', (e) => {
+	e.preventDefault();
 	fetch('/editarOferta', {
 		headers: {
 			'Content-type': 'application/json'
 		},
 		method: 'POST',
 		body: JSON.stringify({
+			id: $('#inputDesactivadoId').val(),
 			nombre: $('#inputDesactivadoNombre').val(),
 			prioridad: $('#inputDesactivadoPrioridad').val(),
 			precio: $('#inputDesactivadoPrecio').val(),
 			hiperenlace: $('#inputDesactivadoEnlace').val(),
 			descripcion: $('#inputDesactivadoDescripcion').val(),
-		}).then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
-				.then(function(response) {
-					if (response.ok) {
-						return response.json();
-					} else {
-						throw "La oferta ya existe";
-					}
-				})
-				.then(response => {
-                obtenerOfertas();
-            })
+		})
+	}).then(function(response) {
+		if (response.ok) {
+			return response.json();
+		} else {
+			throw "La oferta ya existe";
+		}
 	})
+		.then(response => {
+			
+			limpiarTabla();
+			obtenerOfertas();
+			cerrarModal();
+		})
 });

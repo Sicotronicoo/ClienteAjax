@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ public class IndexController {
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST, value = "/crear")
-	public ResponseEntity<Object> crearOferta(@RequestParam Map<String, String> json) {
+	public ResponseEntity<Object> crearOferta(@RequestBody Map<String, String> json) {
 
 		String precio = json.get("precio");
 		float price = Float.parseFloat(precio);
@@ -48,38 +49,31 @@ public class IndexController {
 		else
 			return new ResponseEntity<Object>(new Error("Email ya existente"), HttpStatus.FORBIDDEN);
 
-		
-		/*Oferta oferta = new Oferta(); 
-		 
-		 oferta.setFecha_Publicacion(new Date());		 
-		  String precio = json.get("precio");
-		 float price = Float.parseFloat(precio);		 
-		 oferta.setNombre(json.get("nombre"));
-		 oferta.setPrioridad(json.get("prioridad")); oferta.setPrecio(price);
-		 oferta.setEnlace(json.get("enlace"));
-		 oferta.setDescripcion(json.get("descripcion"));
-		 
-		 servicioOferta.guardar(oferta);
-		 
-		 return new ResponseEntity<Object>(oferta, HttpStatus.OK);*/
-
 	}
 
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.GET, value = "/editarOferta")
-	public ResponseEntity<Object> actualizarOferta(@RequestParam Map<String, String> json) {
+	@RequestMapping(method = RequestMethod.POST, value = "/editarOferta")
+	public ResponseEntity<Object> actualizarOferta(@RequestBody Map<String, String> json) {
 		
+		
+		
+		String idOferta = json.get("id");
+		
+		Integer id = Integer.valueOf(idOferta);
+		String precio = json.get("precio");
+	
 		Oferta oferta = new Oferta();
 		
-		String precio = json.get("precio");
+		oferta.setId_oferta(id);
 		float price = Float.parseFloat(precio);		
 		oferta.setNombre(json.get("nombre"));
 		oferta.setPrioridad(json.get("prioridad"));
+		oferta.setFecha_Publicacion(new Date());
 		oferta.setEnlace(json.get("hiperenlace"));
 		oferta.setDescripcion(json.get("descripcion"));
 		oferta.setPrecio(price);
 		
-		Oferta ofertaEditada = servicioOferta.actualizar(oferta);
+		Oferta ofertaEditada = servicioOferta.guardar(oferta);
         
 		return new ResponseEntity<Object>(ofertaEditada, HttpStatus.OK);
 		

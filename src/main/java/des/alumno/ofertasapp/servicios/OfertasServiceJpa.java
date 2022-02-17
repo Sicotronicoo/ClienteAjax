@@ -44,18 +44,4 @@ public class OfertasServiceJpa implements IOfertasService {
 		}
 		return null;
 	}
-
-	@Override
-	public Oferta actualizar(Oferta oferta) {
-		Oferta ofertaEditada = ofertasRepo.getById(oferta.getId_oferta());
-
-		ofertaEditada.setNombre(oferta.getNombre());
-		ofertaEditada.setFecha_Publicacion(oferta.getFecha_Publicacion());
-		ofertaEditada.setPrioridad(oferta.getPrioridad());
-		ofertaEditada.setEnlace(oferta.getEnlace());
-		ofertaEditada.setDescripcion(oferta.getDescripcion());
-		ofertaEditada.setPrecio(oferta.getPrecio());
-
-		return ofertaEditada;
-	}
 }
