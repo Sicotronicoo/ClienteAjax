@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import des.alumno.ofertasapp.entidades.Oferta;
@@ -29,11 +28,17 @@ public class IndexController {
 	private OfertasRepository servicioOferta2;
 
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.GET, value = "/index")
-	public List<Oferta> index_get() {
-		return servicioOferta.buscarTodas();
+	@GetMapping("/ofertas")
+	public List<Oferta> paginaInicio() {
+		return servicioOferta2.findAll();
 	}
 
+	
+	@GetMapping("/index")
+	public String  getIndex() {
+		return "index";
+	}
+	
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST, value = "/crear")
 	public ResponseEntity<Object> crearOferta(@RequestBody Map<String, String> json) {

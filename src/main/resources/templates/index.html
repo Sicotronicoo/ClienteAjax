@@ -64,7 +64,7 @@
 
 			<h2>Añadir Oferta</h2>
 
-			<form>
+			<form th:action=@{/}>
 				<div class="form-group">
 					<label class="col-form-label" for="inputNombre">Producto</label> <input type="text"
 						class="form-control" name="nombre" placeholder="Nombre del producto" id="inputNombre">
@@ -96,7 +96,7 @@
 
 					<div class="d-grid gap-2">
 
-						<button type="Submit" class="btn btn-lg btn-primary" id="anadir">Añadir</button>
+						<button type="submit" class="btn btn-lg btn-primary" id="anadir">Añadir</button>
 					</div>
 				</div>
 			</form>

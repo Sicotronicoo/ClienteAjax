@@ -9,7 +9,7 @@ const filtrarPorPriridad = document.querySelector('#filtrarPorPrioridad');
 const actualizarOferta = document.querySelector('#actualizarOferta');
 
 const obtenerOfertas = () => {
-	fetch('/index', { headers: { "Content-Type": "application/json; charset=utf-8" } })
+	fetch('/ofertas', { headers: { "Content-Type": "application/json; charset=utf-8" } })
 		.then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
 		.then(response => {
 
@@ -101,6 +101,7 @@ const borrarOferta = (idOferta) => {
 
 const crearOferta = (e) => {
 	e.preventDefault();
+	//let e = 1;
 	if ($('#inputNombre').val() != "" && $('#selectProducto').val() != ""
 		&& $('#inputPrecio').val() != "" && $('#inputEnlace').val() != ""
 		&& $('#inputDescripcion').val() != "") {
@@ -108,6 +109,7 @@ const crearOferta = (e) => {
 			headers: { "Content-Type": "application/json; charset=utf-8" },
 			method: 'POST',
 			body: JSON.stringify({
+				//id:e,
 				nombre: $('#inputNombre').val(),
 				prioridad: $('#selectProducto').val(),
 				precio: $('#inputPrecio').val(),
