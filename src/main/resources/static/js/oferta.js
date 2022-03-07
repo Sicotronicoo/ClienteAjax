@@ -48,7 +48,7 @@ const obtenerOfertas = () => {
 				botonInfo.setAttribute('name', 'infoModal');
 				botonInfo.setAttribute('type', 'button');
 				botonInfo.addEventListener('click', () => {
-					$("#modal").modal('show');
+				$("#modal").modal('show');
 					mostrarModal(oferta.id_oferta);
 				});
 				$(".btn-close").on('click', function() {
@@ -73,16 +73,17 @@ const obtenerOfertas = () => {
 
 				tr.appendChild(tdBorrar);
 				tableBody.appendChild(tr);
-				borrarOferta(oferta.id_oferta);
+				botonBorrar.addEventListener('click', () => {
+					borrarOferta(oferta.id_oferta);
+					tr.remove();
+				});
 			}
 		});
 }
 
 const borrarOferta = (idOferta) => {
-	const borrar = document.getElementsByName("Borrar");
-	for (let item of borrar) {
-		item.addEventListener('click', () => {
-			item.closest('tr').remove();
+//					item.closest('tr').remove();
+
 			$.ajax({
 				url: "/borrar/" + idOferta,
 				contentType: "application/json; charset=utf-8",
@@ -94,8 +95,7 @@ const borrarOferta = (idOferta) => {
 					}
 				}
 			});
-		});
-	}
+
 
 }
 
@@ -246,7 +246,7 @@ const mostrarModal = (idOferta) => {
 
 			ModalBody.appendChild(labelFecha);
 			ModalBody.appendChild(inputFecha);
-			ModalBody.appendChild(document.createElement('br'));
+			
 
 
 			ModalBody.appendChild(labelPrioridad);
